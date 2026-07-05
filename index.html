@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <!-- ဖုန်းများအတွက် အရေးကြီးဆုံး Tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dev: MyoThiHa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh;
+            background-color: #fdf0f3;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            transition: background-color 1s ease;
+        }
+
+        /* အစပိုင်း မြင်ရမည့် နေရာ */
+        #main-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #d81b60;
+            font-size: clamp(1.2rem, 4.5vw, 2rem);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            font-size: clamp(1.5rem, 5.5vw, 2.5rem);
+            display: block;
+            margin-top: 15px;
+            color: #c2185b;
+        }
+
+        h1 i { color: #ff4081; margin: 0 5px; }
+        .fa-snowflake { color: #4fc3f7 !important; }
+
+        .btn-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none; border-radius: 30px;
+            padding: 12px 25px;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        #btn-yes { background-color: #ff4081; color: white; z-index: 5; }
+        #btn-no { background-color: #fff; color: #ff4081; border: 2px solid #ff4081; z-index: 15; }
+
+        /* နောက်ဆုံးမြင်ရမည့် အသည်းပုံနှင့် စာသား (အသစ်ထည့်ထားသည်) */
+        #finale {
+            display: none;
+            text-align: center;
+            z-index: 20;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .giant-heart {
+            font-size: clamp(80px, 20vw, 120px);
+            color: #e91e63;
+            text-shadow: 0 0 30px rgba(233, 30, 99, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .finale-text {
+            font-size: clamp(1.2rem, 4.5vw, 2rem);
+            color: #c2185b;
+            font-weight: bold;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards 0.5s;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* အသည်းပုံ မိုးရွာသည့် Effect */
+        .falling-heart {
+            position: absolute;
+            top: -10vh;
+            color: #e91e63;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- ပထမဆုံး မြင်ရမည့် မျက်နှာပြင် -->
+    <div id="main-container">
+        <h1 id="title-text">
+            အရင်လို ပြန်ခေါ်ပါနော်... <i class="fa-solid fa-hand-holding-heart fa-bounce" style="--fa-animation-duration: 2s;"></i><br> 
+            အေးစက်စက်ကြီး မနေပါနဲ့ baby ရယ် <i class="fa-regular fa-snowflake fa-spin-pulse"></i><br>
+            အရင်ကပုံစံလေးကို အရမ်းလွမ်းတယ် <i class="fa-solid fa-face-sad-tear"></i><br>
+            <span class="highlight"><i class="fa-solid fa-rotate-left"></i> အရင်လို ပြန်နေရအောင်နော် Baby</span>
+        </h1>
+        <div class="btn-wrapper">
+            <button id="btn-yes" onclick="growYes()">ဟုတ်ပါပြီ ပြန်ခေါ်ပမယ်ရှင့် <i class="fa-solid fa-heart fa-beat"></i></button>
+            <button id="btn-no" onmouseover="moveNo()" onclick="moveNo()">မခေါ်ဘူး <i class="fa-solid fa-person-running"></i></button>
+        </div>
+    </div>
+
+    <!-- စိတ်ပြေသွားလျှင် ပေါ်လာမည့် မျက်နှာပြင် -->
+    <div id="finale">
+        <div class="giant-heart"><i class="fa-solid fa-heart fa-beat"></i></div>
+        <div class="finale-text">
+            ချစ်တယ်နော် Baby! 😘 <br>
+            အရင်လို ပြန်ခေါ်ပေးလို့ အရမ်းဝမ်းသာတာပဲ ❤️ <br>
+            နောက်ဆို အေးစက်စက်ကြီး မနေနဲ့တော့နော်...
+        </div>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+        const mainContainer = document.getElementById('main-container');
+        const finale = document.getElementById('finale');
+        
+        let scaleYes = 1, scaleNo = 1;
+
+        // မခေါ်ဘူး ခလုတ် ပြေးသည့် လုပ်ဆောင်ချက်
+        function moveNo() {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+            
+            if (scaleNo > 0.3) scaleNo -= 0.1;
+            btnNo.style.transform = `scale(${scaleNo})`;
+        }
+
+        // ပြန်ခေါ်မယ် ခလုတ် ကြီးလာသည့် လုပ်ဆောင်ချက်
+        function growYes() {
+            scaleYes += 0.8;
+            btnYes.style.transform = `scale(${scaleYes})`;
+
+            // လုံလောက်အောင် ကြီးသွားလျှင် နောက်မျက်နှာပြင်သို့ ပြောင်းရန်
+            if (scaleYes > 4) {
+                setTimeout(() => {
+                    mainContainer.style.display = 'none'; // မူလစာမျက်နှာကို ဖျောက်မည်
+                    document.body.style.backgroundColor = '#ffcdd2'; // နောက်ခံအရောင် ပြောင်းမည်
+                    finale.style.display = 'block'; // အဆုံးသတ် စာမျက်နှာကို ပြမည်
+                    startHeartRain(); // အသည်းပုံ မိုးရွာမည်
+                }, 300);
+            }
+        }
+
+        // အသည်းပုံ မိုးရွာသည့် လုပ်ဆောင်ချက်
+        function startHeartRain() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('falling-heart');
+                heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+                
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => { heart.remove(); }, 5000);
+            }, 150);
+        }
+    </script>
+</body>
+</html>
